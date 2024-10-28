@@ -1,11 +1,10 @@
-import React, { useState, useEffect } from 'react';
-import axios from "axios";
+import React, { useEffect, useState } from 'react';
+import axios from 'axios';
 import "../styles/products.css";
 
 const Products = () => {
     const [data, setData] = useState([]);
     const [searchTitle, setSearchTitle] = useState("");
-    const [filterData, setFilterData] = useState([]);
 
     useEffect(() => {
         fetchData();
@@ -13,35 +12,37 @@ const Products = () => {
 
     const fetchData = async () => {
         try {
-            let response = await axios.get("https://dummyjson.com/products");
-            setData(response.data.products);
-            setFilterData(response.data.products);
+            const response = await axios.get("https://dummyjson.com/products");
+            setData(response?.data?.products?.map(product => ({
+                ...product,
+                selected: false,
+            })));
         } catch (error) {
             console.error("Error fetching data:", error);
         }
     };
 
-    useEffect(() => {
-        const debounceTimer = setTimeout(() => {
-            if (searchTitle) {
-                const filtered = data.filter(product =>
-                    product.title.toLowerCase().includes(searchTitle.toLowerCase())
-                );
-                setFilterData(filtered);
-            } else {
-                setFilterData(data);
-            }
-        }, 300);
+    const handleSelectAll = (e) => {
+        const isChecked = e.target.checked;
+        setData(prevData => prevData?.map(item => ({ ...item, selected: isChecked })));
+    };
 
-        return () => clearTimeout(debounceTimer);
-    }, [searchTitle, data]);
+    const handleCheckboxChange = (id) => {
+        setData(prevData =>
+            prevData?.map(item => item.id === id ? { ...item, selected: !item.selected } : item)
+        );
+    };
+
+    const handleDeleteSelected = () => {
+        setData(prevData => prevData?.filter(item => !item.selected));
+    };
 
     return (
-        <div className='main-container'>
-            <div className='search'>
+        <div className="main-container">
+            <div className="search">
                 <input
                     type="text"
-                    placeholder='Search by Title...'
+                    placeholder="Search by Title..."
                     value={searchTitle}
                     onChange={(e) => setSearchTitle(e.target.value)}
                 />
@@ -50,7 +51,7 @@ const Products = () => {
                 <thead>
                     <tr>
                         <th>
-                            <input type="checkbox" />
+                            <input type="checkbox" onChange={handleSelectAll} />
                         </th>
                         <th>Title</th>
                         <th>Description</th>
@@ -59,21 +60,31 @@ const Products = () => {
                     </tr>
                 </thead>
                 <tbody>
-                    {filterData?.map((element) => (
-                        <tr key={element?.id}>
-                            <td>
-                                <input type="checkbox" />
-                            </td>
-                            <td>{element?.title}</td>
-                            <td>{element?.description}</td>
-                            <td>{element?.price}</td>
-                            <td>{element?.brand}</td>
-                        </tr>
-                    ))}
+                    {data
+                        ?.filter(product => product?.title?.toLowerCase()?.includes(searchTitle.toLowerCase()))
+                        .map(product => (
+                            <tr key={product?.id} className={product.selected ? 'selected-row' : ''}>
+                                <td>
+                                    <input
+                                        type="checkbox"
+                                        checked={product?.selected || false}
+                                        onChange={() => handleCheckboxChange(product.id)}
+                                    />
+                                </td>
+                                <td>{product?.title}</td>
+                                <td>{product?.description}</td>
+                                <td>{product?.price}</td>
+                                <td>{product?.brand}</td>
+                            </tr>
+                        ))}
                 </tbody>
             </table>
+            <div className='bottom-container'>
+                <button className='delete' onClick={handleDeleteSelected}>Delete Selected</button>
+            </div>
         </div>
     );
 };
 
 export default Products;
+

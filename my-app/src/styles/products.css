@@ -41,3 +41,12 @@ table {
   border-radius: 8px;
   overflow: hidden;
 }
+.selected-row {
+  background-color: lightgrey;
+}
+.bottom-container{
+  padding: 50px 0 5px 0;
+}
+.delete{
+  padding: 5px;
+}
