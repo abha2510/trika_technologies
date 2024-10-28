@@ -41,12 +41,35 @@ table {
   border-radius: 8px;
   overflow: hidden;
 }
+
 .selected-row {
   background-color: lightgrey;
 }
-.bottom-container{
+
+.bottom-container {
   padding: 50px 0 5px 0;
 }
-.delete{
+
+.delete {
   padding: 5px;
+}
+
+.bottom-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px;
+}
+
+.delete {
+  background-color: #ff4d4d;
+  color: #fff;
+  padding: 8px 16px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.delete:hover {
+  background-color: #e60000;
 }

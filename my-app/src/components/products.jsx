@@ -1,13 +1,17 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import "../styles/products.css";
+import Pagination from './pagination';
 
 const Products = () => {
     const [data, setData] = useState([]);
     const [searchTitle, setSearchTitle] = useState("");
+    const [page, setPage] = useState(1);
+    const itemsPerPage = 10;
 
     useEffect(() => {
         fetchData();
+        setPage(1);
     }, []);
 
     const fetchData = async () => {
@@ -36,7 +40,27 @@ const Products = () => {
     const handleDeleteSelected = () => {
         setData(prevData => prevData?.filter(item => !item.selected));
     };
+    const totalItems = data.length;
+    const numPages = Math.ceil(totalItems / itemsPerPage);
+    const lastItemIndex = page * itemsPerPage;
+    const firstItemIndex = lastItemIndex - itemsPerPage;
+    const visibleItems = data.slice(firstItemIndex, lastItemIndex);
 
+    const goToNextPage = () => {
+        if (page < numPages) setPage(page + 1);
+    };
+
+    const goToPrevPage = () => {
+        if (page > 1) setPage(page - 1);
+    };
+
+    const skipNextTwoPages = () => {
+        if (page + 2 <= numPages) setPage(page + 2);
+    };
+
+    const skipPrevTwoPages = () => {
+        if (page - 2 >= 1) setPage(page - 2);
+    };
     return (
         <div className="main-container">
             <div className="search">
@@ -60,7 +84,7 @@ const Products = () => {
                     </tr>
                 </thead>
                 <tbody>
-                    {data
+                    {visibleItems
                         ?.filter(product => product?.title?.toLowerCase()?.includes(searchTitle.toLowerCase()))
                         .map(product => (
                             <tr key={product?.id} className={product.selected ? 'selected-row' : ''}>
@@ -71,16 +95,25 @@ const Products = () => {
                                         onChange={() => handleCheckboxChange(product.id)}
                                     />
                                 </td>
-                                <td>{product?.title}</td>
-                                <td>{product?.description}</td>
-                                <td>{product?.price}</td>
-                                <td>{product?.brand}</td>
+                                <td>{product?.title || 'NA'}</td>
+                                <td>{product?.description || 'NA'}</td>
+                                <td>₹ {product?.price || '0'}</td>
+                                <td>{product?.brand || 'NA'}</td>
                             </tr>
                         ))}
                 </tbody>
             </table>
             <div className='bottom-container'>
                 <button className='delete' onClick={handleDeleteSelected}>Delete Selected</button>
+                <Pagination
+                    currentPage={page}
+                    totalPages={numPages}
+                    onPageChange={setPage}
+                    onNextPage={goToNextPage}
+                    onPrevPage={goToPrevPage}
+                    onNextTwoPages={skipNextTwoPages}
+                    onPrevTwoPages={skipPrevTwoPages}
+                />
             </div>
         </div>
     );
