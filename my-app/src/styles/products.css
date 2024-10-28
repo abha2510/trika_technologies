@@ -1,0 +1,43 @@
+.main-container {
+  width: 80%;
+  margin: 50px auto;
+}
+
+.search {
+  margin-bottom: 20px;
+}
+
+.search input {
+  padding: 10px;
+}
+
+table {
+  border-collapse: collapse;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  background-color: #f9f9f9;
+
+}
+
+th,
+td {
+  padding: 12px 15px;
+  text-align: left;
+  border: 1px solid #ddd;
+  text-align: center;
+}
+
+th {
+  background-color: gray;
+  color: white;
+  font-weight: bold;
+  text-align: center;
+}
+
+td {
+  color: #333;
+}
+
+table {
+  border-radius: 8px;
+  overflow: hidden;
+}
