@@ -16,13 +16,14 @@ const Products = () => {
 
     const fetchData = async () => {
         try {
-            const response = await axios.get("https://dummyjson.com/products");
-            setData(response?.data?.products?.map(product => ({
+            const response = await axios.get("http://localhost:3000/products");
+            setData(response?.data?.map(product => ({
                 ...product,
                 selected: false,
-            })));
+            })) || []);
         } catch (error) {
             console.error("Error fetching data:", error);
+            setData([])
         }
     };
 
@@ -40,11 +41,12 @@ const Products = () => {
     const handleDeleteSelected = () => {
         setData(prevData => prevData?.filter(item => !item.selected));
     };
-    const totalItems = data.length;
+    const totalItems = data?.length;
     const numPages = Math.ceil(totalItems / itemsPerPage);
     const lastItemIndex = page * itemsPerPage;
     const firstItemIndex = lastItemIndex - itemsPerPage;
-    const visibleItems = data.slice(firstItemIndex, lastItemIndex);
+    const visibleItems = (data || []).slice(firstItemIndex, lastItemIndex);
+
 
     const goToNextPage = () => {
         if (page < numPages) setPage(page + 1);
@@ -63,10 +65,11 @@ const Products = () => {
     };
     return (
         <div className="main-container">
+            <h1 className='title'>Trika Technologies</h1>
             <div className="search">
                 <input
                     type="text"
-                    placeholder="Search by Title..."
+                    placeholder="Search Products..."
                     value={searchTitle}
                     onChange={(e) => setSearchTitle(e.target.value)}
                 />

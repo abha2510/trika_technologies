@@ -9,6 +9,7 @@
 
 .search input {
   padding: 10px;
+  width: 35%;
 }
 
 table {
@@ -72,4 +73,7 @@ table {
 
 .delete:hover {
   background-color: #e60000;
+}
+.title{
+  text-align: center;
 }
