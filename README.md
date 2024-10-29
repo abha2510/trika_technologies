@@ -50,7 +50,7 @@ Trika
    <li> Initialize the project : <code>npm init -y</code></li>
    <li> Install json-server : <code>npm install json-server</code></li>
    <li> Start the JSON Server : <code>node server.js</code></li>
-   JSON Server should now be running on :http://localhost:8000.
+   JSON Server should now be running on http://localhost:8000.
  </ul>
 
  ### Frontend Setup (React)
